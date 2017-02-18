@@ -1,0 +1,20 @@
+#!/bin/bash
+sudo apt-get update
+sudo apt-get install cloud-utils
+wget http://s3.amazonaws.com/ec2metadata/ec2-metadata
+chmod u+x ec2-metadata
+aws ec2 run-instances --image-id ami-6edd3078 --count 1 --instance-type t2.micro  --key-name cwitter --security-groups "allow ssh and http"
+INSTANCE_ID= $(aws ec2 describe-instances --filters "Name=key-name,Values=cwitter")
+echo $INSTANCE_ID
+cat >> /home/cwitter/wpweek5/text
+$INSTANCE_ID
+$ for $INSTANCE_ID in /home/cwitter/wpweek5/text
+do
+  aws ec2 terminate-instances --instace-ids $INSTANCE_ID --grace 3 
+  echo "instance terminated"
+done
+
+
+
+
+ 
